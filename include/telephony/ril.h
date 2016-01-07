@@ -5100,6 +5100,22 @@ typedef struct {
 
 /***********************************************************************/
 
+/**
+ * RIL_RESPONSE_ACKNOWLEDGEMENT
+ *
+ * This is used by Asynchronous solicited messages and Unsolicited messages
+ * to acknowledge the receipt of those messages in RIL.java so that the ack
+ * can be used to let ril.cpp to release wakelock.
+ *
+ * Valid errors
+ * SUCCESS
+ * RADIO_NOT_AVAILABLE
+ */
+
+#define RIL_RESPONSE_ACKNOWLEDGEMENT 800
+
+/***********************************************************************/
+
 
 #define RIL_UNSOL_RESPONSE_BASE 1000
 
