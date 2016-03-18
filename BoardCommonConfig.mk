@@ -21,7 +21,7 @@
 TARGET_SPECIFIC_HEADER_PATH := device/samsung/lt01-common/include
 
 # BlissPop Config Flags
-TARGET_TC_ROM := 5.3-sm
+TARGET_TC_ROM := 4.9
 TARGET_TC_KERNEL := 6.0-linaro
 BLISSIFY := true
 BLISS_O3 := true
@@ -30,10 +30,11 @@ BLISS_GRAPHITE := false
 BLISS_KRAIT := false
 BLISS_PIPE := true
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := $(TARGET_TC_KERNEL)
+TARGET_GCC_VERSION_EXP := $(TARGET_TC_ROM)
 WITH_LZMA_OTA := true
 
 #SaberMod
--include vendor/bliss/config/sm.mk
+#-include vendor/bliss/config/sm.mk
 
 COMMON_PATH := device/samsung/lt01-common
 
