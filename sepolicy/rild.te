@@ -37,7 +37,7 @@ allow rild rild_socket:chr_file { open read write };
 allow rild system_data_file:dir w_dir_perms;
 #allow rild system_data_file:file create_file_perms;
 #allow rild time_daemon:unix_stream_socket connectto;
-allow rild system_file:file { execmod };
+#allow rild system_file:file { execmod };
 
 allow rild rild:process execmem;
 allow rild diagnostic_device:chr_file { read write open };
