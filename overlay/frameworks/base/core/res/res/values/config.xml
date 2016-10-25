@@ -58,6 +58,7 @@
             64 - Volume rocker
          For example, a device with Home, Back and Menu keys would set this
          config to 7. -->
+    <add-resource type="integer" name="config_deviceHardwareKeys"></add-resource>
     <integer name="config_deviceHardwareKeys">71</integer>
 
 
