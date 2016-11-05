@@ -31,11 +31,14 @@ BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_CMDLINE := console=ttySAC2,115200 
 
 # RIL
-TARGET_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
+BOARD_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
 
-# Use dlmalloc instead of jemalloc for mallocs
-#MALLOC_IMPL := dlmalloc
+# Bionic
 MALLOC_SVELTE := true
+TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+
+# Don't use finit (allows wifi module to load correctly)
+KERNEL_HAS_FINIT_MODULE := false
 
 # Filesystem
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2235564032

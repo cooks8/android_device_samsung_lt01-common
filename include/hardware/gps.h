@@ -310,12 +310,6 @@ typedef uint32_t GnssMeasurementFlags;
 #define GNSS_MEASUREMENT_HAS_CARRIER_PHASE                     (1<<11)
 /** A valid 'carrier phase uncertainty' is stored in the data structure. */
 #define GNSS_MEASUREMENT_HAS_CARRIER_PHASE_UNCERTAINTY         (1<<12)
-/**
- * The value of 'pseudorange rate' is uncorrected.
- * This is a mandatory flag. See comments of
- * GpsMeasurement::pseudorange_rate_mps for more details.
- */
-#define GNSS_MEASUREMENT_HAS_UNCORRECTED_PSEUDORANGE_RATE      (1<<18)
 
 /* The following typedef together with its constants below are deprecated, and
  * will be removed in the next release. */
@@ -509,6 +503,11 @@ typedef uint8_t                         GnssConstellationType;
 #define AGPS_RIL_INTERFACE      "agps_ril"
 
 /**
+ * The GPS chipset can use Psc for AGPS.
+ */
+#define AGPS_USE_PSC
+
+/**
  * Name for the GPS_Geofencing interface.
  */
 #define GPS_GEOFENCING_INTERFACE   "gps_geofencing"
@@ -527,11 +526,6 @@ typedef uint8_t                         GnssConstellationType;
  * Name of the GNSS/GPS configuration interface.
  */
 #define GNSS_CONFIGURATION_INTERFACE     "gnss_configuration"
-
-/**
- * The GPS chipset can use Psc for AGPS.
- */
-#define AGPS_USE_PSC
 
 
 /** Represents a location. */
@@ -1785,6 +1779,8 @@ typedef struct {
 
     /**
      * 1-Sigma uncertainty of the Received GPS Time-of-Week in nanoseconds.
+     *
+     * This value must be populated if 'state' != GPS_MEASUREMENT_STATE_UNKNOWN.
      */
     int64_t received_sv_time_uncertainty_in_ns;
 
@@ -1807,7 +1803,11 @@ typedef struct {
      * corrections described above.)
      *
      * The value includes the 'pseudorange rate uncertainty' in it.
-     * A positive value indicates that the pseudorange is getting larger.
+     * A positive 'uncorrected' value indicates that the SV is moving away from the receiver.
+     *
+     * The sign of the 'uncorrected' 'pseudorange rate' and its relation to the sign of 'doppler
+     * shift' is given by the equation:
+     *      pseudorange rate = -k * doppler shift   (where k is a constant)
      *
      * This should be the most accurate pseudorange rate available, based on
      * fresh signal measurements from this channel.
@@ -1837,13 +1837,21 @@ typedef struct {
 
     /**
      * Accumulated delta range since the last channel reset in meters.
-     * The data is available if 'accumulated delta range state' != GPS_ADR_STATE_UNKNOWN.
+     * A positive value indicates that the SV is moving away from the receiver.
+     *
+     * The sign of the 'accumulated delta range' and its relation to the sign of 'carrier phase'
+     * is given by the equation:
+     *          accumulated delta range = -k * carrier phase    (where k is a constant)
+     *
+     * This value must be populated if 'accumulated delta range state' != GPS_ADR_STATE_UNKNOWN.
+     * However, it is expected that the data is only accurate when:
+     *      'accumulated delta range state' == GPS_ADR_STATE_VALID.
      */
     double accumulated_delta_range_m;
 
     /**
      * 1-Sigma uncertainty of the accumulated delta range in meters.
-     * The data is available if 'accumulated delta range state' != GPS_ADR_STATE_UNKNOWN.
+     * This value must be populated if 'accumulated delta range state' != GPS_ADR_STATE_UNKNOWN.
      */
     double accumulated_delta_range_uncertainty_m;
 
@@ -2215,4 +2223,5 @@ typedef struct {
 __END_DECLS
 
 #endif /* ANDROID_INCLUDE_HARDWARE_GPS_H */
+
 
